@@ -1,0 +1,17 @@
+services:
+  - type: worker
+    name: hermes-gateway
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_ALLOWED_USERS
+        value: "5789631016"
+      - key: VANSROUTER_URL
+        sync: false
+      - key: VANSROUTER_API_KEY
+        value: "59892d6855594d25f267bbdf8b3f87ed64626907f374a70cd7716c781e660276"
+      - key: HERMES_HOME
+        value: /opt/data

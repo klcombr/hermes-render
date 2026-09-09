@@ -1,0 +1,38 @@
+# Hermes Agent Config for Render
+# Points to VansRouter on Render
+
+database:
+  journal_mode: wal
+
+model:
+  default: oc/mimo-v2.5-free
+  provider: custom
+  api_key: ${VANSROUTER_API_KEY}
+  base_url: ${VANSROUTER_URL}/v1
+
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 8000
+  user_char_limit: 4000
+  context_injection: always
+
+compression:
+  enabled: true
+  threshold: 0.5
+
+agent:
+  max_turns: 500
+  reasoning_effort: medium
+
+terminal:
+  backend: local
+  timeout: 180
+
+display:
+  streaming: true
+
+telemetry:
+  shared_metrics:
+    enabled: false
+    send: false

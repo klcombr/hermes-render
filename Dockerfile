@@ -1,5 +1,5 @@
 # Hermes Agent Gateway for Render (Web Service)
-# Installs via pip from PyPI with Telegram support
+# Installs via pip from PyPI with Telegram + API server support
 
 FROM python:3.13-slim
 
@@ -8,8 +8,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates curl git && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Hermes Agent with Telegram support and aiohttp for api_server
-RUN pip install --no-cache-dir "hermes-agent[telegram]" aiohttp
+# Install Hermes Agent with Telegram and messaging extras
+# Install aiohttp separately to avoid version conflicts
+RUN pip install --no-cache-dir "hermes-agent[telegram,messaging]" && \
+    pip install --no-cache-dir aiohttp python-telegram-bot
+
+# Verify installations
+RUN python -c "import aiohttp; print('aiohttp OK')" && \
+    python -c "import telegram; print('telegram OK')"
 
 # Non-root user
 RUN useradd -m -u 1000 hermes && \
@@ -21,6 +27,8 @@ ENV PATH="/home/hermes/.local/bin:${PATH}"
 ENV PYTHONUNBUFFERED=1
 ENV API_SERVER_PORT=8642
 ENV API_SERVER_HOST=0.0.0.0
+# API server requires a key for authentication
+ENV API_SERVER_KEY=hermes-render-key-2026
 
 USER hermes
 WORKDIR /home/hermes

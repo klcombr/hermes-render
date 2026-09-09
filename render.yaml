@@ -17,3 +17,5 @@ services:
         value: /opt/data
       - key: API_SERVER_PORT
         value: "8642"
+      - key: API_SERVER_KEY
+        value: "hermes-render-key-2026"

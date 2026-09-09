@@ -1,5 +1,5 @@
 services:
-  - type: worker
+  - type: web
     name: hermes-gateway
     runtime: docker
     plan: free
@@ -15,3 +15,5 @@ services:
         value: "59892d6855594d25f267bbdf8b3f87ed64626907f374a70cd7716c781e660276"
       - key: HERMES_HOME
         value: /opt/data
+      - key: API_SERVER_PORT
+        value: "8642"

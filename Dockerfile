@@ -1,5 +1,6 @@
-# Hermes Agent Gateway for Render
-# Simplified from official Dockerfile — gateway only, no s6-overlay
+# Hermes Agent Gateway for Render (Web Service)
+# Uses built-in api_server platform for /health endpoint
+# Simplified from official Dockerfile — gateway + api_server, no s6-overlay
 
 # ── Stage 1: Build environment ──────────────────────────────────────────
 FROM python:3.13-slim AS builder
@@ -44,6 +45,8 @@ ENV HERMES_HOME=/opt/data
 ENV PATH="/opt/hermes/.venv/bin:${PATH}"
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
+# api_server uses this env var for port binding
+ENV API_SERVER_PORT=8642
 
 # Config volume
 VOLUME ["/opt/data"]
@@ -51,9 +54,12 @@ VOLUME ["/opt/data"]
 USER hermes
 WORKDIR /opt/hermes
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
+# Copy config
+COPY --chown=hermes:hermes config.yaml /opt/data/config.yaml
 
-# Default: run gateway
+# Health check against the api_server /health endpoint
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:${API_SERVER_PORT}/health || exit 1
+
+# Run gateway (api_server platform auto-starts with /health)
 CMD ["python", "-m", "hermes_cli.main", "gateway", "run"]

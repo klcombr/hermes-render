@@ -1,5 +1,6 @@
-# Hermes Agent Config for Render
+# Hermes Agent Config for Render (Web Service)
 # Points to VansRouter on Render
+# api_server platform provides /health endpoint for Render's health checks
 
 database:
   journal_mode: wal
@@ -9,6 +10,13 @@ model:
   provider: custom
   api_key: ${VANSROUTER_API_KEY}
   base_url: ${VANSROUTER_URL}/v1
+
+platforms:
+  api_server:
+    enabled: true
+    extra:
+      host: "0.0.0.0"
+      port: ${API_SERVER_PORT:-8642}
 
 memory:
   memory_enabled: true

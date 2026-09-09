@@ -14,12 +14,14 @@ model:
 platforms:
   api_server:
     enabled: true
-    extra:
-      host: "0.0.0.0"
-      port: ${API_SERVER_PORT:-8642}
-      key: ${API_SERVER_KEY}
+    key: ${API_SERVER_KEY}
+    port: ${API_SERVER_PORT:-8642}
+    host: "0.0.0.0"
+
   telegram:
     enabled: true
+    allow_from:
+      - "5789631016"
 
 memory:
   memory_enabled: true
